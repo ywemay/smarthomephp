@@ -135,12 +135,21 @@ function getSvgTempGrid(){
 function addVertexesToGrid(&$grid, $nr = 24){
   $grid .= '<g class="sec-grid vertical-lines">' . "\n";
   for ($i = 1; $i<=$nr; $i++){
-    $x= $i*10;
+    $x= 10 + $i*10;
     $grid .= "<line x1=\"$x\" x2=\"$x\" y1=\"0\" y2=\"140\"></line>\n";
+  }
+  $grid .= '</g>' . "\n";
+  $grid .='<g class="labels">' . "\n";
+  for ($i = 1; $i<=$nr; $i++) {
+    $x = 10+$i*10-($i<10 ? 2 : 3);
+    $grid .= "<text x=\"$x\" y=\"140\">$i</text>\n";
   }
   $grid .= '</g>' . "\n";
 }
 
+/**
+ * Build an svg string to display a graph of temperature readings.
+ */
 function getTempSvg($sensorId, $timeKey, $mode = 'week'){
 
   $dir = DIR_DATA . '/' . $sensorId;
@@ -162,7 +171,7 @@ function getTempSvg($sensorId, $timeKey, $mode = 'week'){
 
   switch($mode){
   case 'day':
-    $viewBox = "0 0 480 140";
+    $viewBox = "0 0 260 140";
     $file_name = $dir . '/day_' . $timeKey . ".log";
     $points = array('avg' => '');
     addVertexesToGrid($grid, 24);
@@ -174,7 +183,7 @@ function getTempSvg($sensorId, $timeKey, $mode = 'week'){
     addVertexesToGrid($grid, 24);
     break;
   case 'week':
-    $viewBox ="0 0 160 140";
+    $viewBox ="0 0 90 140";
     $file_name = $dir . '/week_' . $timeKey . ".dat";
     $points += $points_add;
     addVertexesToGrid($grid, 7);
@@ -224,7 +233,27 @@ function getTempSvg($sensorId, $timeKey, $mode = 'week'){
     }
   }
 
-  $colors = array(
+  $colors = _polylineColors();
+  $out = '<svg class="graph" viewBox="' . $viewBox. '">';
+  $out .= $grid;
+  foreach ($points as $lineK=>$data) {
+    $clr = isset($colors[$lineK])?$colors[$lineK] : '#555555';
+    $out .= '<polyline fill="none" stroke="'. $clr .'" stroke-width="0.8" ';
+    $out .= "\npoints=\"" . implode("\n", $data) . '"/>';
+    $out .= '<g class="data" data-setname="temperature">';
+    if (isset($circles[$lineK])) {
+      $out .= implode("\n", $circles[$lineK]) . '</g>';
+    }
+  }
+  $out .= '</svg>';
+  return $out;
+}
+
+/**
+ * Retuns a set of web colors to use for graph polylines.
+ */
+function _polylineColors(){
+  return array(
     'read' => '#007700',
     'min' => '#003333',
     'avg' => '#ff8800',
@@ -234,17 +263,6 @@ function getTempSvg($sensorId, $timeKey, $mode = 'week'){
     'avgnight' => '#55ff88',
     'maxnight' => '#883399',
   );
-  $out = '<svg class="graph" viewBox="' . $viewBox. '">';
-  $out .= $grid;
-  foreach ($points as $lineK=>$data) {
-    $clr = isset($colors[$lineK])?$colors[$lineK] : '#555555';
-    $out .= '<polyline fill="none" stroke="'. $clr .'" stroke-width="0.8" ';
-    $out .= "\npoints=\"" . implode("\n", $data) . '"/>';
-    $out .= '<g class="data" data-setname="temperature">';
-    $out .= implode("\n", $circles[$lineK]) . '</g>';
-  }
-  $out .= '</svg>';
-  return $out;
 }
 
 function adjustValueToPoint(&$points, &$circles, $k, $val, $valk) {
@@ -257,6 +275,9 @@ function adjustValueToPoint(&$points, &$circles, $k, $val, $valk) {
     "<text x=\"$x\" y=\"" . ($y-5) . "\">$txt</text></g>";
 }
 
+/**
+ * Reads temperature data file and loads it into an array.
+ */
 function readTemperatureDataFile($fname) {
   if (!file_exists($fname)) return FALSE;
   $rez = array();
@@ -268,7 +289,7 @@ function readTemperatureDataFile($fname) {
     if (count($parts) != 2) continue;
     $r = explode(';', $parts[1]);
     if (count($r) == 1) {
-      $rez[$parts[0]] = $r[0];
+      $rez[$parts[0]]['avg'] = $r[0];
     }
     elseif (count($r) == 8) {
       $rez[$parts[0]] = array(
@@ -285,4 +306,5 @@ function readTemperatureDataFile($fname) {
   }
   return $rez;
 }
+
 ?>
