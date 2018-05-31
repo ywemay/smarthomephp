@@ -1,0 +1,43 @@
+.graph {
+  height: 160px;
+/*  height: 500px;
+  width: 800px;*/
+}
+
+.graph .grid {
+  stroke: #555;
+  stroke-dasharray: 0;
+  stroke-width: 0.5;
+}
+
+.sec-grid {
+  stroke: #ccc;
+  stroke-width: 0.2;
+}
+
+.labels {
+  font-size: 6px;
+}
+
+.label-title {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 2em;
+  fill: black;
+}
+
+.data circle {
+  fill: red;
+  stroke-width: 1; 
+}
+
+.data text{
+  display: none;
+  color: black;
+  background: #eee;
+  cursor: pointer;
+}
+
+.data-point:hover > text{
+  display: block;
+}
