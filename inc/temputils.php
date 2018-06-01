@@ -18,7 +18,7 @@ function recordTemperature($deviceID, $time, $value) {
   $hour = date('H', $time);
   $minute = date('i', $time);
 
-  $dir = DIR_DATA . '/' . $deviceID;
+  $dir = DIR_DATA . '/temperature/' . $deviceID;
 
   $logfile = $dir . '/day_' . date("Ymd", $time) . ".log";
   `echo "$hour:$minute $value" >> "$logfile"`;
@@ -148,11 +148,14 @@ function addVertexesToGrid(&$grid, $nr = 24){
 }
 
 /**
+ * @sensorId The id of the sensor device.
+ * @timeKey The number of year (2018), or month (201812), or week (201807), or day (20181230)
+ * @mode day, day_hourly, week, month, year_weekly, year
  * Build an svg string to display a graph of temperature readings.
  */
 function getTempSvg($sensorId, $timeKey, $mode = 'week'){
 
-  $dir = DIR_DATA . '/' . $sensorId;
+  $dir = DIR_DATA . '/temperature/' . $sensorId;
   if (!is_dir($dir)) return FALSE;
 
   $points = array(
@@ -196,7 +199,7 @@ function getTempSvg($sensorId, $timeKey, $mode = 'week'){
     break;
   case 'year_weekly':
     $viewBox = "0 0 500 140";
-    $file_name = $dir . '/year_weekly' . $timeKey . ".dat";
+    $file_name = $dir . '/year_weekly_' . $timeKey . ".dat";
     $points += $points_add;
     addVertexesToGrid($grid, intval(366/7) + 1);
     break;

@@ -8,8 +8,8 @@ BOARD_ALIVE=$?
 LOG_DATE=$(date +%Y-%m-%d)
 LOG_TIME=$(date +%H:%M:%S)
 
-LOG_DIR="$DATA_DIR/$(date +%Y/%m)"
-LOG_BASE_NAME=$(date +%Y%m%d)
+# LOG_DIR="$DATA_DIR/log/temperature"
+# LOG_BASE_NAME=$(date +%Y%m%d)
 
 if [ 0 -eq "$BOARD_ALIVE" ]
 then
@@ -18,5 +18,5 @@ then
 fi
 
 echo -e "Board alive: $BOARD_ALIVE; Date: $LOG_DATE; Time: $LOG_TIME; "
-echo "Log dir: $LOG_DIR; Base name: $LOG_BASE_NAME;"
+# echo "Log dir: $LOG_DIR; Base name: $LOG_BASE_NAME;"
 
