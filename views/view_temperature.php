@@ -36,7 +36,9 @@ class ViewTemperature {
     $table = '<table class="table-temperature">' . "\n";
     $table .= "<tr><th>Sensor</th><th>Temperature</th></tr>\n";
     foreach($this->deviceSettings() as $id=>$inst) {
-      $table .= "\n<tr>\n\t\t<td>$inst[title]</td>\n";
+      $link = a($inst['title'], '/tempview.php?id=' . $id);
+      $table .= "\n<tr>\n\t\t<td>$link</td>\n";
+
       $val = isset($readings[$id]) ? $readings[$id] : 'ERR';
       $table .= "\t\t<td class=\"temperature\">$val</td>\n";
       $table .= "\t</tr>";

@@ -50,6 +50,17 @@ $settings = array(
         'title' => 'Apa gradinarie',
       ),
     ),
+    'analog' => array(
+      'light' => array(
+        'title' => 'Day light',
+      ),
+      'moist' => array(
+        'title' => 'Umeditatea aierului',
+      ),
+      'noisy' => array(
+        'title' => 'Intensitatea sunetului',
+      ),
+    ),
   ),
 );
 ?>

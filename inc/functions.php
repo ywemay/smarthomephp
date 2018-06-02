@@ -4,7 +4,7 @@ function get($k, $default) {
   return isset($_GET[$k]) ? $_GET[$k] : $default;
 }
 
-function a($title, $href, $params) {
+function a($title, $href, $params=array()) {
   $query = array();
   $q = '';
   if (isset($params['query'])) {

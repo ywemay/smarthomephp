@@ -16,3 +16,7 @@ $sec_dir = DIR_DATA . '/security';
 $log_file = $sec_dir . '/SEC' . date('Ymd') . '.log';
 $log = date("H:i:s") . ' ' .  get('r', 'ERROR');
 `echo "$log" >> "$log_file"`;
+
+foreach($_SERVER as $k=>$v) {
+  `echo "$k = $v" >> "$secdir/temp.log"`;
+}

@@ -1,3 +1,4 @@
+
 #!/bin/bash
 cd /var/www/html/robot
 . connect.sh
@@ -17,12 +18,8 @@ case $BOARD_ALIVE in
     LOGSTR="$LOG_TIME: Unknown network error..."
     ;;
 esac
+echo $LOGSTR
 # echo $LOGSTR >> $LOG_FILE;
-LAST_READING="${DATA_DIR}/temperature_last.dat"
-if [[ "$1" == "test" ]]
-then
-  echo "$LOGDATE $LOGSTR";
-else
-  echo "$LOG_DATE $LOGSTR" > $LAST_READING
-  php -f parse_temperatures.php
-fi
+#LAST_READING="${DATA_DIR}/temperature_last.dat"
+#echo "$LOG_DATE $LOGSTR" > $LAST_READING
+#php -f parse_temperatures.php

@@ -1,11 +1,13 @@
 #!/bin/bash
+
+# Reads analog detectors values, Light, Moisture, Noisy ...
 cd /var/www/html/robot
 . connect.sh
 
 case $BOARD_ALIVE in
   0)
-    TEMPERATURES=$(bash read_temperatures.sh)
-    LOGSTR="$LOG_TIME: $TEMPERATURES"
+    ANALOGS=$(bash read_analogs.sh)
+    LOGSTR="$LOG_TIME: $ANALOGS"
     ;;
   1)
     LOGSTR="$LOG_TIME: Failed to connnect to the board..."
@@ -18,11 +20,11 @@ case $BOARD_ALIVE in
     ;;
 esac
 # echo $LOGSTR >> $LOG_FILE;
-LAST_READING="${DATA_DIR}/temperature_last.dat"
-if [[ "$1" == "test" ]]
+LAST_READING="${DATA_DIR}/analog_last.log"
+echo "$LOG_DATE $LOGSTR" > $LAST_READING
+if [[ "$1" == "test" ]] 
 then
-  echo "$LOGDATE $LOGSTR";
+  cat "$LAST_READING"
 else
-  echo "$LOG_DATE $LOGSTR" > $LAST_READING
-  php -f parse_temperatures.php
+  php -f parse_analogs.php
 fi
